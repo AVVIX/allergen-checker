@@ -1,0 +1,17 @@
+{
+  "name": "AVVIX — ¿Lleva gluten?",
+  "short_name": "AVVIX",
+  "description": "Escanea un código de barras y descubre si el producto contiene gluten.",
+  "start_url": "/escanear",
+  "display": "standalone",
+  "background_color": "#ecfdf5",
+  "theme_color": "#059669",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
