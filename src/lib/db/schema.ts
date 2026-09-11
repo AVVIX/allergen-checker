@@ -12,6 +12,7 @@ export const products = sqliteTable("products", {
     enum: ["gluten_free", "contains_gluten", "may_contain_traces", "unknown"],
   }).notNull(),
   glutenReason: text("gluten_reason"),
+  allergensJson: text("allergens_json"),
   source: text("source").notNull().default("openfoodfacts"),
   updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
 });

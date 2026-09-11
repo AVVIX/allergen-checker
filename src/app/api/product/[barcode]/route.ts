@@ -4,6 +4,7 @@ import { getDb } from "@/lib/db/client";
 import { products } from "@/lib/db/schema";
 import { lookupProductByBarcode } from "@/lib/openfoodfacts";
 import { classifyGluten } from "@/lib/gluten";
+import { classifyAllergens, type AllergenResult } from "@/lib/allergens";
 
 const CACHE_MAX_AGE_MS = 1000 * 60 * 60 * 24 * 7; // 7 días
 
@@ -39,6 +40,7 @@ export async function GET(
     }
 
     const classification = classifyGluten(lookup.data);
+    const allergens = classifyAllergens(lookup.data);
     const now = new Date();
 
     const row = {
@@ -51,6 +53,7 @@ export async function GET(
       tracesTags: JSON.stringify(lookup.data.tracesTags ?? []),
       glutenStatus: classification.status,
       glutenReason: classification.reason,
+      allergensJson: JSON.stringify(allergens),
       source: "openfoodfacts",
       updatedAt: now,
     };
@@ -78,7 +81,15 @@ function toResponse(row: {
   imageUrl: string | null;
   glutenStatus: string;
   glutenReason: string | null;
+  allergensJson: string | null;
 }) {
+  let allergens: AllergenResult[] = [];
+  try {
+    allergens = row.allergensJson ? JSON.parse(row.allergensJson) : [];
+  } catch {
+    allergens = [];
+  }
+
   return {
     barcode: row.barcode,
     name: row.name,
@@ -86,5 +97,6 @@ function toResponse(row: {
     imageUrl: row.imageUrl,
     glutenStatus: row.glutenStatus,
     glutenReason: row.glutenReason,
+    allergens,
   };
 }
